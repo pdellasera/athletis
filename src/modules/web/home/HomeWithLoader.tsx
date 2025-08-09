@@ -1,8 +1,9 @@
 
 import { useEffect } from 'react';
-import PageWrapper from '../../components/PageWrapper';
-import { usePageLoader } from '../../hooks/usePageLoader';
+
 import HomePage from './index';
+import { PageWrapper } from '../../../components';
+import { usePageLoader } from '../../../hooks/usePageLoader';
 
 const HomeWithLoader = () => {
   const { isLoading, loadingMessage, hideLoader, updateMessage } = usePageLoader({

@@ -12,20 +12,27 @@ import {
   ChevronRight,
   Sparkles
 } from 'lucide-react';
-import LoginForm from '../../modules/web/auth/LoginForm';
+import useDeviceDetector from '../../hooks/useDeviceDetector';
 import PageWrapper from '../../components/PageWrapper';
 import PeriodSelector from '../../components/PeriodSelector';
 import { hasValidActivePeriod } from '../../utils/periodUtils';
 import type { Period } from '../../utils/periodUtils';
 import pandeporteLogo from '../../assets/pandeporte_logo.png';
 
-const LoginPage = () => {
+// Importaciones dinámicas para web y mobile
+import WebLoginForm from '../../modules/web/auth/LoginForm';
+import MobileLoginForm from '../../modules/mobile/auth/LoginForm';
+
+const AdaptiveLoginPage = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const [showPeriodSelector, setShowPeriodSelector] = useState(false);
   const [userRole, setUserRole] = useState<string>('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const deviceInfo = useDeviceDetector();
 
   const handleLogin = async (email: string, password: string) => {
     console.log('Login attempt:', { email, password });
+    setLoginLoading(true);
     
     // Simulación de autenticación
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -45,6 +52,7 @@ const LoginPage = () => {
         const hasValidPeriod = hasValidActivePeriod();
         
         if (!hasValidPeriod) {
+          setLoginLoading(false);
           // Mostrar selector de período
           setShowPeriodSelector(true);
           return; // No redirigir aún
@@ -52,12 +60,15 @@ const LoginPage = () => {
       }
       
       // Activar loading de página para la transición
+      setLoginLoading(false);
       setPageLoading(true);
       
       // Pequeño delay para mostrar "Redirigiendo..."
       setTimeout(() => {
         window.location.href = '/dashboard';
       }, 500);
+    } else {
+      setLoginLoading(false);
     }
   };
 
@@ -74,46 +85,53 @@ const LoginPage = () => {
     }, 500);
   };
 
-  // Características del sistema
-  const features = [
-    {
-      icon: Shield,
-      title: "Seguro y Confiable",
-      description: "Protección de datos avanzada"
-    },
-    {
-      icon: BarChart3,
-      title: "Análisis Detallado",
-      description: "Estadísticas en tiempo real"
-    },
-    {
-      icon: Users,
-      title: "Gestión de Equipos",
-      description: "Administra jugadores fácilmente"
-    },
-    {
-      icon: Calendar,
-      title: "Planificación",
-      description: "Organiza entrenamientos y partidos"
-    }
-  ];
+  // Renderizar versión mobile
+  const renderMobileVersion = () => {
+    return (
+      <MobileLoginForm 
+        onLogin={handleLogin} 
+        isLoading={loginLoading}
+      />
+    );
+  };
 
-  // Elementos decorativos flotantes
-  const floatingElements = Array.from({ length: 6 }, (_, i) => ({
-    id: i,
-    icon: [Trophy, Target, Zap, Star, Sparkles, Shield][i],
-    delay: i * 0.5,
-    duration: 3 + (i * 0.3),
-    x: Math.random() * 100,
-    y: Math.random() * 100
-  }));
+  // Renderizar versión web (contenido completo del LoginPage original)
+  const renderWebVersion = () => {
+    // Características del sistema
+    const features = [
+      {
+        icon: Shield,
+        title: "Seguro y Confiable",
+        description: "Protección de datos avanzada"
+      },
+      {
+        icon: BarChart3,
+        title: "Análisis Detallado",
+        description: "Estadísticas en tiempo real"
+      },
+      {
+        icon: Users,
+        title: "Gestión de Equipos",
+        description: "Administra jugadores fácilmente"
+      },
+      {
+        icon: Calendar,
+        title: "Planificación",
+        description: "Organiza entrenamientos y partidos"
+      }
+    ];
 
-  return (
-    <PageWrapper 
-      loading={pageLoading} 
-      loadingMessage="Redirigiendo al dashboard..."
-      loadingVariant="default"
-    >
+    // Elementos decorativos flotantes
+    const floatingElements = Array.from({ length: 6 }, (_, i) => ({
+      id: i,
+      icon: [Trophy, Target, Zap, Star, Sparkles, Shield][i],
+      delay: i * 0.5,
+      duration: 3 + (i * 0.3),
+      x: Math.random() * 100,
+      y: Math.random() * 100
+    }));
+
+    return (
       <div className="min-h-screen relative overflow-hidden">
         {/* Fondo con gradiente animado */}
         <div 
@@ -318,30 +336,51 @@ const LoginPage = () => {
                   <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30">
                     <Trophy className="w-6 h-6 text-blue-400" />
                   </div>
-                  <h1 className="text-2xl font-bold text-white">Pandeporte</h1>
+                  <h1 className="text-2xl font-bold text-white">Athletis</h1>
                 </div>
                 <p className="text-gray-400">Inicia sesión para continuar</p>
               </motion.div>
 
-              <LoginForm onSubmit={handleLogin} />
+              <WebLoginForm onSubmit={handleLogin} />
             </div>
           </motion.div>
         </div>
-        
-        {/* Modal de selección de período */}
-        <AnimatePresence>
-          {showPeriodSelector && (
-            <PeriodSelector
-              isOpen={showPeriodSelector}
-              onClose={() => setShowPeriodSelector(false)}
-              onPeriodSelected={handlePeriodSelected}
-              userRole={userRole}
-            />
-          )}
-        </AnimatePresence>
       </div>
+    );
+  };
+
+  return (
+    <PageWrapper 
+      loading={pageLoading} 
+      loadingMessage={
+        deviceInfo.isMobile 
+          ? "Redirigiendo a la app móvil..." 
+          : "Redirigiendo al dashboard..."
+      }
+      loadingVariant="default"
+    >
+      {/* Renderizar según el dispositivo */}
+      {deviceInfo.isMobile || deviceInfo.isTablet ? renderMobileVersion() : renderWebVersion()}
+      
+      {/* Modal de selección de período */}
+      <AnimatePresence>
+        {showPeriodSelector && (
+          <PeriodSelector
+            isOpen={showPeriodSelector}
+            onClose={() => {
+              setShowPeriodSelector(false);
+              // Limpiar autenticación si se cancela
+              localStorage.removeItem('isAuthenticated');
+              localStorage.removeItem('userEmail');
+              localStorage.removeItem('userRole');
+            }}
+            onPeriodSelected={handlePeriodSelected}
+            userRole={userRole}
+          />
+        )}
+      </AnimatePresence>
     </PageWrapper>
   );
 };
 
-export default LoginPage;
+export default AdaptiveLoginPage;

@@ -10,11 +10,10 @@ import {
   FaFistRaised 
 } from 'react-icons/fa';
 import MetricsCard from './components/MetricsCard';
-import PeriodInfo from '../../components/PeriodInfo';
-import PeriodSelector from '../../components/PeriodSelector';
-import type { Period } from '../../utils/periodUtils';
 import GraficaMejoras from './components/GraficaMejoras';
 import GraficaAsistencia from './components/GraficaAsistencia';
+import type { Period } from '../../../utils/periodUtils';
+import { PeriodInfo, PeriodSelector } from '../../../components';
 
 const HomePage = () => {
   const [showPeriodSelector, setShowPeriodSelector] = useState(false);

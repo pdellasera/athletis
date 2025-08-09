@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
-import HomePage from '../../modules/web/home';
+import useDeviceDetector from '../../hooks/useDeviceDetector';
 import PageWrapper from '../../components/PageWrapper';
 import PeriodSelector from '../../components/PeriodSelector';
 import { hasValidActivePeriod } from '../../utils/periodUtils';
 import type { Period } from '../../utils/periodUtils';
 
-const DashboardPage = () => {
+// Importaciones dinámicas para web y mobile
+import WebHomePage from '../../modules/web/home';
+import MobileHomePage from '../../modules/mobile/home';
+
+const AdaptiveDashboardPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingMessage, setLoadingMessage] = useState('Iniciando dashboard...');
   const [showPeriodSelector, setShowPeriodSelector] = useState(false);
+  const deviceInfo = useDeviceDetector();
 
   useEffect(() => {
     const loadDashboard = async () => {
@@ -21,6 +26,13 @@ const DashboardPage = () => {
           window.location.href = '/auth/login';
           return;
         }
+
+        // Mensaje de carga adaptativo
+        setLoadingMessage(
+          deviceInfo.isMobile 
+            ? 'Optimizando para móvil...' 
+            : 'Cargando dashboard...'
+        );
 
         // Si es entrenador, verificar período activo
         if (userRole === 'entrenador') {
@@ -45,7 +57,11 @@ const DashboardPage = () => {
         await new Promise(resolve => setTimeout(resolve, 600));
         
         // Simular carga de gráficos
-        setLoadingMessage('Preparando gráficos y estadísticas...');
+        setLoadingMessage(
+          deviceInfo.isMobile 
+            ? 'Adaptando gráficos para móvil...' 
+            : 'Preparando gráficos y estadísticas...'
+        );
         await new Promise(resolve => setTimeout(resolve, 500));
         
         // Simular carga final
@@ -60,7 +76,7 @@ const DashboardPage = () => {
     };
 
     loadDashboard();
-  }, []);
+  }, [deviceInfo.isMobile]);
 
   const handlePeriodSelected = (period: Period) => {
     console.log('Período seleccionado en dashboard:', period);
@@ -75,13 +91,21 @@ const DashboardPage = () => {
     }, 2000);
   };
 
+  // Renderizar componente según el dispositivo
+  const renderHomePage = () => {
+    if (deviceInfo.isMobile || deviceInfo.isTablet) {
+      return <MobileHomePage />;
+    }
+    return <WebHomePage />;
+  };
+
   return (
     <PageWrapper 
       loading={isLoading} 
       loadingMessage={loadingMessage}
       loadingVariant="sport"
     >
-      <HomePage />
+      {renderHomePage()}
       
       {/* Modal de selección de período */}
       <PeriodSelector
@@ -104,4 +128,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default AdaptiveDashboardPage;

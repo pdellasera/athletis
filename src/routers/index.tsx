@@ -1,8 +1,13 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Suspense } from 'react';
 
-// Importar componentes de páginas
-import { LoginPage, WelcomePage, DashboardPage, NotFoundPage } from './components';
+// Importar componentes de páginas adaptativos
+import { 
+  AdaptiveLoginPage, 
+  AdaptiveDashboardPage, 
+  AdaptiveWelcomePage,
+  NotFoundPage 
+} from './components';
 import PageLoader from '../components/PageLoader';
 
 // Componente de carga mejorado para Suspense
@@ -35,22 +40,22 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Configuración del router
+// Configuración del router con componentes adaptativos
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <SuspenseWrapper><WelcomePage /></SuspenseWrapper>,
+    element: <SuspenseWrapper><AdaptiveWelcomePage /></SuspenseWrapper>,
   },
   {
     path: '/auth/login',
-    element: <SuspenseWrapper><LoginPage /></SuspenseWrapper>,
+    element: <SuspenseWrapper><AdaptiveLoginPage /></SuspenseWrapper>,
   },
   {
     path: '/dashboard',
     element: (
       <SuspenseWrapper>
         <ProtectedRoute>
-          <DashboardPage />
+          <AdaptiveDashboardPage />
         </ProtectedRoute>
       </SuspenseWrapper>
     ),
