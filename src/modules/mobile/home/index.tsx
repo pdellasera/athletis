@@ -8,8 +8,6 @@ import {
   BarChart3,
   Settings,
   BookOpen,
-  TrendingUp,
-  Award,
   Clock,
 } from 'lucide-react';
 // Importar iconos de deportes de React Icons
@@ -37,13 +35,12 @@ const MobileHomePage = () => {
     setShowPeriodSelector(false);
   };
 
-  // Navegación principal del bottom tab - INCLUYE TODOS LOS ELEMENTOS DE LA WEB
+  // Navegación principal del bottom tab - SIMPLIFICADO
   const navigationTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: <Home className="w-5 h-5" /> },
     { id: 'programs', label: 'Programas', icon: <BookOpen className="w-5 h-5" /> },
-    { id: 'performance', label: 'Rendimiento', icon: <TrendingUp className="w-5 h-5" /> },
-    { id: 'achievements', label: 'Logros', icon: <Award className="w-5 h-5" /> },
-    { id: 'schedule', label: 'Horarios', icon: <Clock className="w-5 h-5" /> }
+    { id: 'schedule', label: 'Horarios', icon: <Clock className="w-5 h-5" /> },
+    { id: 'profile', label: 'Perfil', icon: <User className="w-5 h-5" /> }
   ];
 
   return (
