@@ -1,21 +1,28 @@
 import { motion } from 'framer-motion';
 import { Users, RefreshCw } from 'lucide-react';
+// Importar iconos de deportes de React Icons
+import { 
+    FaFutbol, 
+    FaBasketballBall, 
+    FaTableTennis, 
+    FaChess 
+} from 'react-icons/fa';
 
 interface AsistenciaData {
     name: string;
     value: number;
     percentage: number;
     color: string;
-    icon: string;
+    icon: React.ReactNode;
 }
 
 const GraficaAsistencia = () => {
-    // Datos de asistencia por deporte (valores de 0 a 100)
+    // Datos de asistencia por deporte (valores de 0 a 100) con colores consistentes
     const asistenciaData: AsistenciaData[] = [
-        { name: 'Futsal', value: 87, percentage: 86, color: '#3b82f6', icon: '⚽' },
-        { name: 'Baloncesto', value: 73, percentage: 73, color: '#06b6d4', icon: '🏀' },
-        { name: 'Bádminton', value: 45, percentage: 45, color: '#f97316', icon: '🏸' },
-        { name: 'Ajedrez', value: 32, percentage: 32, color: '#10b981', icon: '♟️' }
+        { name: 'Futsal', value: 87, percentage: 86, color: '#22c55e', icon: <FaFutbol className="w-5 h-5 text-green-500" /> },
+        { name: 'Baloncesto', value: 73, percentage: 73, color: '#f97316', icon: <FaBasketballBall className="w-5 h-5 text-orange-500" /> },
+        { name: 'Bádminton', value: 45, percentage: 45, color: '#3b82f6', icon: <FaTableTennis className="w-5 h-5 text-blue-500" /> },
+        { name: 'Ajedrez', value: 32, percentage: 32, color: '#a855f7', icon: <FaChess className="w-5 h-5 text-purple-500" /> }
     ];
 
     // Calcular el total de porcentajes para obtener porcentajes relativos para el donut
@@ -33,7 +40,7 @@ const GraficaAsistencia = () => {
         <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1.0 }}
+            transition={{ delay: 0.2 }}
             className="bg-gradient-to-br from-gray-900/95 to-gray-800/95 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 shadow-2xl"
         >
             <div className="flex items-center justify-between mb-6">
@@ -130,7 +137,7 @@ const GraficaAsistencia = () => {
                                     initial={{ strokeDasharray: `0 ${circumference}` }}
                                     animate={{ strokeDasharray }}
                                     transition={{
-                                        delay: 0.5 + (index * 0.3),
+                                        delay: 0.2 + (index * 0.3),
                                         duration: 1.2,
                                         ease: "easeOut"
                                     }}
@@ -155,7 +162,7 @@ const GraficaAsistencia = () => {
                                     initial={{ strokeDasharray: `0 ${circumference}` }}
                                     animate={{ strokeDasharray }}
                                     transition={{
-                                        delay: 0.7 + (index * 0.3),
+                                        delay: 0.2 + (index * 0.3),
                                         duration: 1.2,
                                         ease: "easeOut"
                                     }}
@@ -213,7 +220,7 @@ const GraficaAsistencia = () => {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 1.5, duration: 0.8 }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
                             className="text-4xl font-bold text-white drop-shadow-lg"
                         >
                             {promedioAsistencia}%
@@ -221,7 +228,7 @@ const GraficaAsistencia = () => {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 1.7 }}
+                            transition={{ delay: 0.2 }}
                             className="text-gray-300 text-sm font-medium mt-1"
                         >
                             Promedio General
@@ -237,7 +244,7 @@ const GraficaAsistencia = () => {
                         key={item.name}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 2.0 + (index * 0.1) }}
+                        transition={{ delay: 0.2 + (index * 0.1) }}
                         className="flex items-center justify-between hover:bg-gray-700/20 rounded-lg p-3 transition-all duration-200"
                     >
                         <div className="flex items-center space-x-3">
@@ -272,7 +279,7 @@ const GraficaAsistencia = () => {
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 2.8 }}
+                        transition={{ delay: 0.2 }}
                         className="rounded-xl p-4 border border-green-500/30 bg-green-500/10"
                     >
                         <div className="flex items-center justify-between">
@@ -291,7 +298,7 @@ const GraficaAsistencia = () => {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 3.0 }}
+                        transition={{ delay: 0.2 }}
                         className="rounded-xl p-4 border border-blue-500/30 bg-blue-500/10"
                     >
                         <div className="flex items-center justify-between">

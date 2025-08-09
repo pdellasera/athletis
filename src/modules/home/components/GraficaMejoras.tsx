@@ -1,27 +1,41 @@
 import { motion } from 'framer-motion';
 import { TrendingUp, BarChart3, Activity, Target } from 'lucide-react';
 import { useState } from 'react';
+// Importar iconos de deportes de React Icons
+import { 
+  FaFutbol, 
+  FaBasketballBall, 
+  FaTableTennis,
+  FaChess, 
+  FaFistRaised 
+} from 'react-icons/fa';
 
 interface DeporteData {
   name: string;
   mejoraTecnica: number;
   participacion: number;
   rendimiento: number;
-  color: string;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 const GraficaMejoras = () => {
   const [hoveredSport, setHoveredSport] = useState<string | null>(null);
 
-  // Datos de los 5 deportes
+  // Datos de los 5 deportes - SIN colores individuales
   const deportesData: DeporteData[] = [
-    { name: 'Futsal', mejoraTecnica: 88, participacion: 95, rendimiento: 90, color: '#10b981', icon: '⚽' },
-    { name: 'Baloncesto', mejoraTecnica: 84, participacion: 92, rendimiento: 88, color: '#f59e0b', icon: '🏀' },
-    { name: 'Bádminton', mejoraTecnica: 80, participacion: 88, rendimiento: 84, color: '#8b5cf6', icon: '🏸' },
-    { name: 'Ajedrez', mejoraTecnica: 95, participacion: 82, rendimiento: 98, color: '#ef4444', icon: '♟️' },
-    { name: 'Boxeo', mejoraTecnica: 92, participacion: 98, rendimiento: 95, color: '#3b82f6', icon: '🥊' }
+    { name: 'Futsal', mejoraTecnica: 88, participacion: 95, rendimiento: 90, icon: <FaFutbol className="w-5 h-5 text-green-400" /> },
+    { name: 'Baloncesto', mejoraTecnica: 84, participacion: 92, rendimiento: 88, icon: <FaBasketballBall className="w-5 h-5 text-orange-400" /> },
+    { name: 'Bádminton', mejoraTecnica: 80, participacion: 88, rendimiento: 84, icon: <FaTableTennis className="w-5 h-5 text-blue-400" /> },
+    { name: 'Ajedrez', mejoraTecnica: 95, participacion: 82, rendimiento: 98, icon: <FaChess className="w-5 h-5 text-purple-400" /> },
+    { name: 'Boxeo', mejoraTecnica: 92, participacion: 98, rendimiento: 95, icon: <FaFistRaised className="w-5 h-5 text-red-400" /> }
   ];
+
+  // Solo 3 colores para las 3 métricas
+  const colors = {
+    mejoraTecnica: '#10b981', // Verde
+    participacion: '#f59e0b',  // Naranja
+    rendimiento: '#3b82f6'     // Azul
+  };
 
   const maxValue = 100;
 
@@ -65,7 +79,7 @@ const GraficaMejoras = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
           className="bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20 rounded-xl p-4"
         >
           <div className="flex items-center space-x-3">
@@ -80,7 +94,7 @@ const GraficaMejoras = () => {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.2}}
           className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-4"
         >
           <div className="flex items-center space-x-3">
@@ -119,7 +133,7 @@ const GraficaMejoras = () => {
               {/* Contenedor de los 3 cilindros */}
               <div className="flex justify-center items-end space-x-1 h-64">
                 
-                {/* Cilindro de Mejora Técnica */}
+                {/* Cilindro de Mejora Técnica - VERDE */}
                 <div className="relative flex flex-col items-center w-10">
                   <div 
                     className="relative w-full rounded-md border-2 border-gray-400/40 overflow-hidden shadow-lg"
@@ -130,32 +144,29 @@ const GraficaMejoras = () => {
                       boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.1), 0 4px 15px rgba(0,0,0,0.3)'
                     }}
                   >
-                    {/* Líquido animado */}
                     <motion.div
                       initial={{ height: 0 }}
                       animate={{ height: `${(sport.mejoraTecnica / maxValue) * 100}%` }}
                       transition={{ 
-                        delay: 0.5 + (index * 0.1),
+                        delay: 0.2 + (index * 0.1),
                         duration: 1.5,
                         ease: "easeOut"
                       }}
                       className="absolute bottom-0 left-0 right-0 rounded-md"
                       style={{ 
-                        background: `linear-gradient(180deg, ${sport.color}60 0%, ${sport.color}90 50%, ${sport.color} 100%)`,
-                        boxShadow: `inset 0 2px 6px ${sport.color}80, 0 0 15px ${sport.color}40`
+                        background: `linear-gradient(180deg, ${colors.mejoraTecnica}60 0%, ${colors.mejoraTecnica}90 50%, ${colors.mejoraTecnica} 100%)`,
+                        boxShadow: `inset 0 2px 6px ${colors.mejoraTecnica}80, 0 0 15px ${colors.mejoraTecnica}40`
                       }}
                     >
-                      {/* Ondas en la superficie */}
                       <div 
                         className="absolute top-0 left-0 right-0 h-1 rounded-md opacity-80"
                         style={{
-                          background: `linear-gradient(90deg, transparent, ${sport.color}, transparent)`,
+                          background: `linear-gradient(90deg, transparent, ${colors.mejoraTecnica}, transparent)`,
                           animation: 'wave 2s ease-in-out infinite'
                         }}
                       />
                     </motion.div>
                     
-                    {/* Reflejo de vidrio */}
                     <div 
                       className="absolute top-0 left-0 w-1/3 h-full rounded-l-md"
                       style={{
@@ -164,19 +175,17 @@ const GraficaMejoras = () => {
                     />
                   </div>
                   
-                  {/* Valor */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 2.0 + (index * 0.1) }}
-                    className="mt-1 text-xs font-bold text-center"
-                    style={{ color: sport.color }}
+                    transition={{ delay: 0.2 + (index * 0.1) }}
+                    className="mt-1 text-xs font-bold text-center text-green-400"
                   >
                     {sport.mejoraTecnica}%
                   </motion.div>
                 </div>
 
-                {/* Cilindro de Participación */}
+                {/* Cilindro de Participación - NARANJA */}
                 <div className="relative flex flex-col items-center w-10">
                   <div 
                     className="relative w-full rounded-md border-2 border-gray-400/40 overflow-hidden shadow-lg"
@@ -191,20 +200,20 @@ const GraficaMejoras = () => {
                       initial={{ height: 0 }}
                       animate={{ height: `${(sport.participacion / maxValue) * 100}%` }}
                       transition={{ 
-                        delay: 0.7 + (index * 0.1),
+                        delay: 0.2 + (index * 0.1),
                         duration: 1.5,
                         ease: "easeOut"
                       }}
                       className="absolute bottom-0 left-0 right-0 rounded-md"
                       style={{ 
-                        background: `linear-gradient(180deg, #f59e0b60 0%, #f59e0b90 50%, #f59e0b 100%)`,
-                        boxShadow: `inset 0 2px 6px #f59e0b80, 0 0 15px #f59e0b40`
+                        background: `linear-gradient(180deg, ${colors.participacion}60 0%, ${colors.participacion}90 50%, ${colors.participacion} 100%)`,
+                        boxShadow: `inset 0 2px 6px ${colors.participacion}80, 0 0 15px ${colors.participacion}40`
                       }}
                     >
                       <div 
                         className="absolute top-0 left-0 right-0 h-1 rounded-md opacity-80"
                         style={{
-                          background: `linear-gradient(90deg, transparent, #f59e0b, transparent)`,
+                          background: `linear-gradient(90deg, transparent, ${colors.participacion}, transparent)`,
                           animation: 'wave 2s ease-in-out infinite 0.3s'
                         }}
                       />
@@ -219,14 +228,14 @@ const GraficaMejoras = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 2.2 + (index * 0.1) }}
+                    transition={{ delay: 0.2 + (index * 0.1) }}
                     className="mt-1 text-xs font-bold text-center text-orange-400"
                   >
                     {sport.participacion}%
                   </motion.div>
                 </div>
 
-                {/* Cilindro de Rendimiento */}
+                {/* Cilindro de Rendimiento - AZUL */}
                 <div className="relative flex flex-col items-center w-10">
                   <div 
                     className="relative w-full rounded-md border-2 border-gray-400/40 overflow-hidden shadow-lg"
@@ -241,20 +250,20 @@ const GraficaMejoras = () => {
                       initial={{ height: 0 }}
                       animate={{ height: `${(sport.rendimiento / maxValue) * 100}%` }}
                       transition={{ 
-                        delay: 0.9 + (index * 0.1),
+                        delay: 0.2 + (index * 0.1),
                         duration: 1.5,
                         ease: "easeOut"
                       }}
                       className="absolute bottom-0 left-0 right-0 rounded-md"
                       style={{ 
-                        background: `linear-gradient(180deg, #3b82f660 0%, #3b82f690 50%, #3b82f6 100%)`,
-                        boxShadow: `inset 0 2px 6px #3b82f680, 0 0 15px #3b82f640`
+                        background: `linear-gradient(180deg, ${colors.rendimiento}60 0%, ${colors.rendimiento}90 50%, ${colors.rendimiento} 100%)`,
+                        boxShadow: `inset 0 2px 6px ${colors.rendimiento}80, 0 0 15px ${colors.rendimiento}40`
                       }}
                     >
                       <div 
                         className="absolute top-0 left-0 right-0 h-1 rounded-md opacity-80"
                         style={{
-                          background: `linear-gradient(90deg, transparent, #3b82f6, transparent)`,
+                          background: `linear-gradient(90deg, transparent, ${colors.rendimiento}, transparent)`,
                           animation: 'wave 2s ease-in-out infinite 0.6s'
                         }}
                       />
@@ -269,7 +278,7 @@ const GraficaMejoras = () => {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 2.4 + (index * 0.1) }}
+                    transition={{ delay: 0.2 + (index * 0.1) }}
                     className="mt-1 text-xs font-bold text-center text-blue-400"
                   >
                     {sport.rendimiento}%
@@ -286,27 +295,27 @@ const GraficaMejoras = () => {
                 >
                   <div className="bg-gray-900/95 backdrop-blur-xl text-white text-sm px-4 py-3 rounded-xl shadow-2xl border border-gray-600/50 min-w-max">
                     <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-lg">{sport.icon}</span>
+                      {sport.icon}
                       <span className="font-bold text-white">{sport.name}</span>
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center justify-between space-x-4">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: sport.color }}></div>
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.mejoraTecnica }}></div>
                           <span className="text-gray-300 text-xs">Mejora Técnica</span>
                         </div>
                         <span className="font-semibold text-white text-xs">{sport.mejoraTecnica}%</span>
                       </div>
                       <div className="flex items-center justify-between space-x-4">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.participacion }}></div>
                           <span className="text-gray-300 text-xs">Participación</span>
                         </div>
                         <span className="font-semibold text-white text-xs">{sport.participacion}%</span>
                       </div>
                       <div className="flex items-center justify-between space-x-4">
                         <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors.rendimiento }}></div>
                           <span className="text-gray-300 text-xs">Rendimiento</span>
                         </div>
                         <span className="font-semibold text-white text-xs">{sport.rendimiento}%</span>
@@ -320,10 +329,10 @@ const GraficaMejoras = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 2.6 + (index * 0.1) }}
+                transition={{ delay: 0.2 + (index * 0.1) }}
                 className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center"
               >
-                <div className="text-lg mb-1">{sport.icon}</div>
+                <div className="mb-1 flex justify-center">{sport.icon}</div>
                 <div className="text-xs text-gray-400 font-medium whitespace-nowrap">{sport.name}</div>
               </motion.div>
             </motion.div>
@@ -334,15 +343,15 @@ const GraficaMejoras = () => {
       {/* Leyenda */}
       <div className="flex justify-center space-x-8 mb-6">
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.mejoraTecnica }}></div>
           <span className="text-gray-300 text-sm">Mejora Técnica</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.participacion }}></div>
           <span className="text-gray-300 text-sm">Participación</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: colors.rendimiento }}></div>
           <span className="text-gray-300 text-sm">Rendimiento</span>
         </div>
       </div>
@@ -352,7 +361,7 @@ const GraficaMejoras = () => {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 3.0 }}
+          transition={{ delay: 0.2 }}
           className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4"
         >
           <div className="flex items-center justify-between">
@@ -360,14 +369,14 @@ const GraficaMejoras = () => {
               <p className="text-green-400 text-sm font-medium">Mejor Rendimiento</p>
               <p className="text-white text-lg font-bold">Ajedrez - 98%</p>
             </div>
-            <div className="text-2xl">♟️</div>
+            <FaChess className="w-6 h-6 text-purple-400" />
           </div>
         </motion.div>
         
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 3.2 }}
+          transition={{ delay: 0.2 }}
           className="bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-xl p-4"
         >
           <div className="flex items-center justify-between">
@@ -375,7 +384,7 @@ const GraficaMejoras = () => {
               <p className="text-orange-400 text-sm font-medium">Mayor Participación</p>
               <p className="text-white text-lg font-bold">Boxeo - 98%</p>
             </div>
-            <div className="text-2xl">🥊</div>
+            <FaFistRaised className="w-6 h-6 text-red-400" />
           </div>
         </motion.div>
       </div>

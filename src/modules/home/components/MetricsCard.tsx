@@ -11,10 +11,31 @@ interface MetricsCardProps {
   color?: string;
 }
 
-const MetricsCard = ({ title, value, subtitle, icon, trend, progress = 75, color = '#3b82f6' }: MetricsCardProps) => {
-  const getProgressColor = () => {
-    return color;
+const MetricsCard = ({ title, value, subtitle, icon, trend, progress = 75 }: MetricsCardProps) => {
+  // Función para obtener el gradiente basado en el porcentaje
+  const getProgressGradient = () => {
+    if (progress <= 50) {
+      return 'from-red-500 to-red-600'; // Rojo
+    } else if (progress <= 70) {
+      return 'from-orange-500 to-amber-600'; // Naranja
+    } else {
+      return 'from-green-500 to-emerald-600'; // Verde
+    }
   };
+
+  // Función para obtener el color principal basado en el porcentaje
+  const getMainColor = () => {
+    if (progress <= 50) {
+      return '#ef4444'; // Rojo
+    } else if (progress <= 70) {
+      return '#f59e0b'; // Naranja
+    } else {
+      return '#10b981'; // Verde
+    }
+  };
+
+  const progressColor = getMainColor();
+  const gradientClasses = getProgressGradient();
 
   return (
     <motion.div
@@ -50,8 +71,8 @@ const MetricsCard = ({ title, value, subtitle, icon, trend, progress = 75, color
           <div 
             className="p-2 rounded-lg shadow-lg border"
             style={{ 
-              backgroundColor: `${getProgressColor()}15`,
-              borderColor: `${getProgressColor()}30`
+              backgroundColor: `${progressColor}15`,
+              borderColor: `${progressColor}30`
             }}
           >
             {icon}
@@ -63,53 +84,28 @@ const MetricsCard = ({ title, value, subtitle, icon, trend, progress = 75, color
         <p className="text-gray-400 text-sm">{subtitle}</p>
       </div>
 
-      {/* Barra de progreso */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-500">Progreso</span>
-          <span className="text-gray-300 font-medium">{progress}%</span>
-        </div>
-        
-        <div className="relative">
-          {/* Fondo de la barra */}
-          <div className="w-full h-2 bg-gray-800/80 rounded-full overflow-hidden border border-gray-700/30">
-            {/* Barra de progreso animada */}
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
-              className="h-full rounded-full relative"
-              style={{ 
-                background: `linear-gradient(90deg, ${getProgressColor()}, ${getProgressColor()}CC)`,
-                boxShadow: `0 0 10px ${getProgressColor()}40`
-              }}
-            >
-              {/* Efecto de brillo en la barra */}
-              <div 
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${getProgressColor()}40, transparent)`,
-                  animation: 'shimmer 2s infinite'
-                }}
-              />
-            </motion.div>
-          </div>
-          
-          {/* Indicador de posición */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 1.8 }}
-            className="absolute top-0 w-1 h-2 rounded-full"
-            style={{ 
-              left: `${progress}%`,
-              backgroundColor: getProgressColor(),
-              boxShadow: `0 0 8px ${getProgressColor()}`,
-              transform: 'translateX(-50%)'
-            }}
-          />
-        </div>
-      </div>
+      {/* Progress Bar usando el estilo de PeriodInfo */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ delay: 0.4 }} 
+        className="mt-6" 
+      > 
+        <div className="flex justify-between items-center mb-2"> 
+          <span className="text-gray-400 text-xs">Progreso</span> 
+          <span className="text-white text-xs font-semibold"> 
+            {Math.round(progress)}% 
+          </span> 
+        </div> 
+        <div className="w-full bg-gray-600/30 rounded-full h-2 overflow-hidden"> 
+          <motion.div 
+            initial={{ width: 0 }} 
+            animate={{ width: `${progress}%` }} 
+            transition={{ duration: 1.5, ease: "easeOut" }} 
+            className={`h-full bg-gradient-to-r ${gradientClasses} rounded-full shadow-lg`} 
+          /> 
+        </div> 
+      </motion.div>
 
       {/* Información adicional en la parte inferior */}
       <div className="mt-4 pt-3 border-t border-gray-700/30">
@@ -118,7 +114,7 @@ const MetricsCard = ({ title, value, subtitle, icon, trend, progress = 75, color
           <div className="flex items-center space-x-1">
             <div 
               className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: getProgressColor() }}
+              style={{ backgroundColor: progressColor }}
             />
             <span className="text-gray-400">Activo</span>
           </div>

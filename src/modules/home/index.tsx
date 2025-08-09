@@ -1,6 +1,14 @@
 import { motion } from 'framer-motion';
 import { Clock, BookOpen, Award, TrendingUp, User, Bell, Search } from 'lucide-react';
 import { useState } from 'react';
+// Importar iconos de deportes de React Icons
+import { 
+  FaFutbol, 
+  FaBasketballBall, 
+  FaTableTennis, 
+  FaChess, 
+  FaFistRaised 
+} from 'react-icons/fa';
 import MetricsCard from './components/MetricsCard';
 import PeriodInfo from '../../components/PeriodInfo';
 import PeriodSelector from '../../components/PeriodSelector';
@@ -80,36 +88,16 @@ const HomePage = () => {
 
               {/* Action Buttons */}
               <div className="flex items-center space-x-2">
-                {/* Flag/Language */}
-                <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-all duration-300 group">
-                  <div className="w-5 h-4 bg-gradient-to-r from-red-500 via-yellow-500 to-red-500 rounded-sm group-hover:scale-110 transition-transform"></div>
-                </button>
-
                 {/* Notifications */}
                 <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-all duration-300 relative group">
                   <Bell className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                   <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg"></span>
                 </button>
 
-                {/* Settings */}
-                <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-all duration-300 group">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-white group-hover:rotate-90 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </button>
-
                 {/* Help */}
                 <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-all duration-300 group">
                   <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
-
-                {/* Theme Toggle */}
-                <button className="p-2 hover:bg-gray-700/50 rounded-lg transition-all duration-300 group">
-                  <svg className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                   </svg>
                 </button>
               </div>
@@ -232,7 +220,7 @@ const HomePage = () => {
                 title="Futsal"
                 value="18"
                 subtitle="Participantes activos"
-                icon={<div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">⚽</div>}
+                icon={<div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center"><FaFutbol className="w-3 h-3 text-white" /></div>}
                 trend={15}
                 progress={78}
                 color="#22c55e"
@@ -249,7 +237,7 @@ const HomePage = () => {
                 title="Baloncesto"
                 value="15"
                 subtitle="Participantes activos"
-                icon={<div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center">🏀</div>}
+                icon={<div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center"><FaBasketballBall className="w-3 h-3 text-white" /></div>}
                 trend={8}
                 progress={65}
                 color="#f97316"
@@ -266,7 +254,7 @@ const HomePage = () => {
                 title="Bádminton"
                 value="12"
                 subtitle="Participantes activos"
-                icon={<div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">🏸</div>}
+                icon={<div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center"><FaTableTennis className="w-3 h-3 text-white" /></div>}
                 trend={12}
                 progress={52}
                 color="#3b82f6"
@@ -283,7 +271,7 @@ const HomePage = () => {
                 title="Ajedrez"
                 value="20"
                 subtitle="Participantes activos"
-                icon={<div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center">♟️</div>}
+                icon={<div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center"><FaChess className="w-3 h-3 text-white" /></div>}
                 trend={25}
                 progress={87}
                 color="#a855f7"
@@ -300,7 +288,7 @@ const HomePage = () => {
                 title="Boxeo"
                 value="14"
                 subtitle="Participantes activos"
-                icon={<div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">🥊</div>}
+                icon={<div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center"><FaFistRaised className="w-3 h-3 text-white" /></div>}
                 trend={10}
                 progress={61}
                 color="#ef4444"

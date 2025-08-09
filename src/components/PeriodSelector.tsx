@@ -1,47 +1,60 @@
-import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Clock, Trophy, X, Check } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { usePeriod } from '../hooks/usePeriod';
+import { formatDateRange } from '../utils/periodUtils';
+import type { Period } from '../utils/periodUtils';
+// Importar iconos de deportes de React Icons
 import { 
-  AVAILABLE_SPORTS, 
-  getAvailablePeriods, 
-  setActivePeriod, 
-  formatDateRange 
-} from '../utils/periodUtils';
-
-import type { 
-  Period, 
-  SportType
-} from '../utils/periodUtils';
+  FaFutbol, 
+  FaBasketballBall, 
+  FaTableTennis,
+  FaRunning,
+  FaSwimmer,
+  FaBaseballBall,
+  FaBiking
+} from 'react-icons/fa';
+import { GiVolleyballBall } from 'react-icons/gi';
 
 interface PeriodSelectorProps {
   isOpen: boolean;
   onClose: () => void;
   onPeriodSelected: (period: Period) => void;
-  userRole?: string;
+  userRole: string;
 }
 
-const PeriodSelector: React.FC<PeriodSelectorProps> = ({ 
-  isOpen, 
-  onClose, 
+const AVAILABLE_SPORTS = [
+  'Fútbol',
+  'Baloncesto', 
+  'Voleibol',
+  'Atletismo',
+  'Natación',
+  'Tenis',
+  'Béisbol',
+  'Ciclismo'
+];
+
+const PeriodSelector: React.FC<PeriodSelectorProps> = ({
+  isOpen,
+  onClose,
   onPeriodSelected
 }) => {
-  const [selectedSport, setSelectedSport] = useState<SportType | null>(null);
-  const [availablePeriods, setAvailablePeriods] = useState<Period[]>([]);
+  const { availablePeriods, updateActivePeriod } = usePeriod();
+  const [selectedSport, setSelectedSport] = useState<string>('');
   const [selectedPeriod, setSelectedPeriod] = useState<Period | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Reset selections when modal opens
   useEffect(() => {
     if (isOpen) {
-      // Cargar períodos disponibles
-      const periods = getAvailablePeriods();
-      setAvailablePeriods(periods);
+      setSelectedSport('');
+      setSelectedPeriod(null);
     }
   }, [isOpen]);
 
-  const handleSportSelect = (sport: SportType) => {
+  const handleSportSelect = (sport: string) => {
     setSelectedSport(sport);
-    const periodsForSport = getAvailablePeriods(sport);
-    setAvailablePeriods(periodsForSport);
+    setSelectedPeriod(null); // Reset period selection when sport changes
   };
 
   const handlePeriodSelect = (period: Period) => {
@@ -52,19 +65,19 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({
     if (!selectedPeriod) return;
     
     setIsLoading(true);
-    
     try {
-      // Simular guardado
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Actualizar el período activo
+      const success = updateActivePeriod(selectedPeriod);
       
-      // Guardar en localStorage
-      setActivePeriod(selectedPeriod);
-      
-      // Notificar al componente padre
-      onPeriodSelected(selectedPeriod);
-      
-      // Cerrar modal
-      onClose();
+      if (success) {
+        // Notificar al componente padre
+        onPeriodSelected(selectedPeriod);
+        
+        // Cerrar modal
+        onClose();
+      } else {
+        console.error('Error al actualizar el período activo');
+      }
     } catch (error) {
       console.error('Error al seleccionar período:', error);
     } finally {
@@ -73,17 +86,17 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({
   };
 
   const getSportIcon = (sport: string) => {
-    const icons: Record<string, string> = {
-      'Fútbol': '⚽',
-      'Baloncesto': '🏀',
-      'Voleibol': '🏐',
-      'Atletismo': '🏃‍♂️',
-      'Natación': '🏊‍♂️',
-      'Tenis': '🎾',
-      'Béisbol': '⚾',
-      'Ciclismo': '🚴‍♂️'
+    const icons: Record<string, React.ReactNode> = {
+      'Fútbol': <FaFutbol className="w-6 h-6 text-green-400" />,
+      'Baloncesto': <FaBasketballBall className="w-6 h-6 text-orange-400" />,
+      'Voleibol': <GiVolleyballBall className="w-6 h-6 text-blue-400" />,
+      'Atletismo': <FaRunning className="w-6 h-6 text-red-400" />,
+      'Natación': <FaSwimmer className="w-6 h-6 text-cyan-400" />,
+      'Tenis': <FaTableTennis className="w-6 h-6 text-yellow-400" />,
+      'Béisbol': <FaBaseballBall className="w-6 h-6 text-purple-400" />,
+      'Ciclismo': <FaBiking className="w-6 h-6 text-pink-400" />
     };
-    return icons[sport] || '🏆';
+    return icons[sport] || <Trophy className="w-6 h-6 text-gray-400" />;
   };
 
   if (!isOpen) return null;
@@ -148,7 +161,7 @@ const PeriodSelector: React.FC<PeriodSelectorProps> = ({
                         : 'border-gray-600/50 bg-gray-800/50 text-gray-300 hover:border-gray-500 hover:bg-gray-700/50'
                     }`}
                   >
-                    <div className="text-2xl mb-2">{getSportIcon(sport)}</div>
+                    <div className="mb-2 flex justify-center">{getSportIcon(sport)}</div>
                     <div className="text-sm font-medium">{sport}</div>
                   </motion.button>
                 ))}

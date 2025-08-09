@@ -2,6 +2,17 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Trophy, Settings, RefreshCw } from 'lucide-react';
 import { usePeriod } from '../hooks/usePeriod';
 import { formatDateRange } from '../utils/periodUtils';
+// Importar iconos de deportes de React Icons
+import { 
+  FaFutbol, 
+  FaBasketballBall, 
+  FaTableTennis,
+  FaRunning,
+  FaSwimmer,
+  FaBaseballBall,
+  FaBiking
+} from 'react-icons/fa';
+import { GiVolleyballBall } from 'react-icons/gi';
 
 interface PeriodInfoProps {
   onChangePeriod?: () => void;
@@ -15,17 +26,17 @@ const PeriodInfo: React.FC<PeriodInfoProps> = ({
   const { activePeriod, isLoading, refreshPeriods } = usePeriod();
 
   const getSportIcon = (sport: string) => {
-    const icons: Record<string, string> = {
-      'Fútbol': '⚽',
-      'Baloncesto': '🏀',
-      'Voleibol': '🏐',
-      'Atletismo': '🏃‍♂️',
-      'Natación': '🏊‍♂️',
-      'Tenis': '🎾',
-      'Béisbol': '⚾',
-      'Ciclismo': '🚴‍♂️'
+    const icons: Record<string, React.ReactNode> = {
+      'Fútbol': <FaFutbol className="w-5 h-5 text-white" />,
+      'Baloncesto': <FaBasketballBall className="w-5 h-5 text-white" />,
+      'Voleibol': <GiVolleyballBall className="w-5 h-5 text-white" />,
+      'Atletismo': <FaRunning className="w-5 h-5 text-white" />,
+      'Natación': <FaSwimmer className="w-5 h-5 text-white" />,
+      'Tenis': <FaTableTennis className="w-5 h-5 text-white" />,
+      'Béisbol': <FaBaseballBall className="w-5 h-5 text-white" />,
+      'Ciclismo': <FaBiking className="w-5 h-5 text-white" />
     };
-    return icons[sport] || '🏆';
+    return icons[sport] || <Trophy className="w-5 h-5 text-white" />;
   };
 
   const getSportColor = (sport: string) => {
@@ -134,7 +145,7 @@ const PeriodInfo: React.FC<PeriodInfoProps> = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
           <div className={`w-10 h-10 bg-gradient-to-br ${sportColors.gradient} rounded-xl flex items-center justify-center shadow-lg`}>
-            <span className="text-xl">{getSportIcon(activePeriod.sport)}</span>
+            {getSportIcon(activePeriod.sport)}
           </div>
           <div>
             <h3 className="text-white font-bold text-lg">Período Activo</h3>
